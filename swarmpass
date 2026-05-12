@@ -4,7 +4,7 @@ _swarmpass_loaded=1
 _swarmpass_usage()
 {
     cat - <<'EOF'
-usage: flympsh <instance> [-- <command> [args...]]
+usage: flympsh <multipass_instance>
 
 Open a Fly environment inside a Multipass instance.
 EOF
@@ -90,3 +90,5 @@ flympshk()
 {
     _fly_destshell=ksh flympsh "$@"
 }
+
+alias mp='multipass'
