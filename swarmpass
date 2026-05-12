@@ -3,10 +3,13 @@ _swarmpass_loaded=1
 
 [ "$_hivecore_loaded" ] || { _hive_core="${FLY_HOME:-$HOME}/.fly.d/plugins/hive-core/hive-core"; [ -f "$_hive_core" ] && . "$_hive_core" || { echo "swarmpass: hive-core plugin not installed — run: fly add f-atwi/hive-core" >&2; return 1; }; unset _hive_core; }
 
-flympsh()  { _fly_transport_run multipass "$@"; }
-fmpsh()    { flympsh "$@"; }
-flympshb() { _fly_destshell=bash flympsh "$@"; }
-flympshz() { _fly_destshell=zsh  flympsh "$@"; }
-flympshk() { _fly_destshell=ksh  flympsh "$@"; }
+flympshell() { _fly_transport_run multipass "$@"; }
+fmpshell()  { flympshell "$@"; }
+flympbash() { _fly_destshell=bash flympshell "$@"; }
+fmpbash()   { flympbash "$@"; }
+flympzsh()  { _fly_destshell=zsh  flympshell "$@"; }
+fmpzsh()    { flympzsh "$@"; }
+flympksh()  { _fly_destshell=ksh  flympshell "$@"; }
+fmpksh()    { flympksh "$@"; }
 
 alias mp='multipass'

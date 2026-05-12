@@ -18,4 +18,4 @@ _swarmpass_completion()
     COMPREPLY=($(compgen -W "$instances" -- "$cur"))
 }
 
-complete -F _swarmpass_completion fmpsh flympsh flympshb flympshz flympshk
+complete -F _swarmpass_completion flympshell fmpshell flympbash fmpbash flympzsh fmpzsh flympksh fmpksh
