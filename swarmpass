@@ -1,94 +1,15 @@
 [ "$_swarmpass_loaded" ] && return 0
 _swarmpass_loaded=1
 
-_swarmpass_usage()
-{
-    cat - <<'EOF'
-usage: flympsh <multipass_instance>
-
-Open a Fly environment inside a Multipass instance.
-EOF
+[ "$_hivecore_loaded" ] || {
+    echo "swarmpass: hivecore plugin not loaded — run: hive add hivecore" >&2
+    return 1
 }
 
-_swarmpass_prepare()
-{
-    : "${FLY_HOME:=$HOME}"
-    : "${FLY_TMPDIR:=/tmp}"
-    : "${FLY_TARZ:=-z}"
-    : "${_fly_lib:=$FLY_HOME/.fly.d/.fly.lib}"
-    : "${_fly_uuid:=$(cat "$FLY_HOME/.fly.d/.flyuuid" 2>/dev/null || uuidgen)}"
-
-    command -v multipass >/dev/null 2>&1 || {
-        echo "swarmpass: multipass command not found" >&2
-        return 1
-    }
-    type _fly_pkg_warp >/dev/null 2>&1 || {
-        echo "swarmpass: load Fly first (. ~/.fly.d/fly source)" >&2
-        return 1
-    }
-
-    _fly_tmpdir="$FLY_TMPDIR/.fly.$(id -u)/$_fly_uuid"
-    _fly_tarz="$FLY_TARZ"
-}
-
-_swarmpass_stage()
-{
-    typeset instance stage_cmd
-
-    instance="$1"
-    stage_cmd="$(_fly_xpretar);$(_fly_xpackage)"
-    _fly_package | multipass exec "$instance" -- /bin/sh -c "$stage_cmd"
-}
-
-_swarmpass_attach()
-{
-    typeset instance attach_cmd
-
-    instance="$1"
-    attach_cmd="FLY_HOME=$_fly_tmpdir; . \"$_fly_tmpdir/.fly.d/.fly.lib/.loginshell\""
-    multipass exec "$instance" -- /bin/sh -c "$attach_cmd"
-}
-
-_swarmpass_run()
-{
-    typeset instance
-
-    instance="$1"
-    shift
-    [ "$instance" ] || {
-        _swarmpass_usage >&2
-        return 1
-    }
-
-    _swarmpass_prepare || return $?
-
-    _swarmpass_stage "$instance" || return $?
-    _swarmpass_attach "$instance"
-}
-
-flympsh()
-{
-    _swarmpass_run "$@"
-}
-
-fmpsh()
-{
-    flympsh "$@"
-}
-
-flympshb()
-{
-    _fly_destshell=bash flympsh "$@"
-}
-
-flympshz()
-{
-    _fly_destshell=zsh flympsh "$@"
-}
-
-flympshk()
-{
-    _fly_destshell=ksh flympsh "$@"
-}
+flympsh()  { _fly_transport_run multipass "$@"; }
+fmpsh()    { flympsh "$@"; }
+flympshb() { _fly_destshell=bash flympsh "$@"; }
+flympshz() { _fly_destshell=zsh  flympsh "$@"; }
+flympshk() { _fly_destshell=ksh  flympsh "$@"; }
 
 alias mp='multipass'
