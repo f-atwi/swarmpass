@@ -5,11 +5,9 @@ _swarmpass_loaded=1
 
 flympshell() { _fly_transport_run multipass "$@"; }
 fmpshell()  { flympshell "$@"; }
-flympbash() { _fly_destshell=bash flympshell "$@"; }
-fmpbash()   { flympbash "$@"; }
-flympzsh()  { _fly_destshell=zsh  flympshell "$@"; }
-fmpzsh()    { flympzsh "$@"; }
-flympksh()  { _fly_destshell=ksh  flympshell "$@"; }
-fmpksh()    { flympksh "$@"; }
-
-alias mp='multipass'
+flympshellb() { _fly_destshell=bash flympshell "$@"; }
+fmpshellb()   { flympshellb "$@"; }
+flympshellz() { _fly_destshell=zsh  flympshell "$@"; }
+fmpshellz()    { flympshellz "$@"; }
+flympshellk() { _fly_destshell=ksh  flympshell "$@"; }
+fmpshellk()    { flympshellk "$@"; }
